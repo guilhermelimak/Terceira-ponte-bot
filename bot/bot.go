@@ -2,7 +2,6 @@ package bot
 
 import (
 	"log"
-	"os"
 	"terceirapontebot/crawler"
 
 	"gopkg.in/telegram-bot-api.v4"
@@ -27,16 +26,7 @@ func parseUpdate(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
 }
 
 // Start : initialize bot connection
-func Start() {
-	token := os.Getenv("BOT_TOKEN")
-
-	bot, err := tgbotapi.NewBotAPI(token)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	log.Printf("Authorized on account %s", bot.Self.UserName)
-
+func Start(bot *tgbotapi.BotAPI) {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
