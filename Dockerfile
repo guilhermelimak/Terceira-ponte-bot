@@ -1,11 +1,12 @@
 FROM golang:latest
 
-RUN mkdir /app
+RUN mkdir $GOPATH/src/terceirapontebot
 
-COPY . /app
+COPY . $GOPATH/src/terceirapontebot
 
-WORKDIR /app
+WORKDIR $GOPATH/src/terceirapontebot
 
+RUN go get
 RUN go build
 
-ENTRYPOINT /app/terceirapontebot
+ENTRYPOINT $GOPATH/src/terceirapontebot/terceirapontebot
