@@ -1,1 +1,1 @@
-The bot expects a token to be stored in the BOT_TOKEN env variable.
+The token should be stored in  a `secret.yml` file like the example.
