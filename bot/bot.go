@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	"log"
 	"terceirapontebot/crawler"
 
@@ -19,11 +20,19 @@ func parseUpdate(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
 		return
 	}
 
-	bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Getting images"))
+	bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Getting images..."))
 
 	links := crawler.GetImgLinks(pageURL)
 	for i := 0; i < len(links); i++ {
-		bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, links[i].Attr[0].Val))
+		path := fmt.Sprintf("img_%v.jpg", i)
+
+		crawler.SaveImage(links[i].Attr[0].Val, path)
+		msg := tgbotapi.NewPhotoUpload(update.Message.Chat.ID, path)
+
+		_, err := bot.Send(msg)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
