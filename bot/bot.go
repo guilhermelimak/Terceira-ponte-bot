@@ -8,6 +8,8 @@ import (
 )
 
 func parseUpdate(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
+	pageURL := "http://www.rodosol.com.br/blog/categoria/terceira-ponte"
+
 	if update.Message == nil {
 		return
 	}
@@ -19,7 +21,7 @@ func parseUpdate(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
 
 	bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Getting images"))
 
-	links := crawler.GetPage("http://www.rodosol.com.br/blog/categoria/terceira-ponte")
+	links := crawler.GetImgLinks(pageURL)
 	for i := 0; i < len(links); i++ {
 		bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, links[i].Attr[0].Val))
 	}

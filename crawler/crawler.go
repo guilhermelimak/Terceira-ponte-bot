@@ -9,8 +9,8 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
-// GetPage : Get all camera image html elements from URL
-func GetPage(url string) []*html.Node {
+// GetImgLinks : Get all camera image html elements from URL
+func GetImgLinks(url string) []*html.Node {
 	resp, err := http.Get(url)
 	if err != nil {
 		panic(err)
