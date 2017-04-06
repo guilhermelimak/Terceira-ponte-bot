@@ -8,8 +8,22 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
 )
 
+func sendMessage(c chan int64, chatID int64, path string, bot *tgbotapi.BotAPI) {
+	for {
+		bytes := <-c
+		msg := tgbotapi.NewPhotoUpload(chatID, path)
+		log.Printf("%v bytes saved", bytes)
+
+		_, err := bot.Send(msg)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
 func parseUpdate(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
 	pageURL := "http://www.rodosol.com.br/blog/categoria/terceira-ponte"
+	chatID := update.Message.Chat.ID
 
 	if update.Message == nil {
 		return
@@ -20,19 +34,16 @@ func parseUpdate(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
 		return
 	}
 
-	bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Getting images..."))
+	bot.Send(tgbotapi.NewMessage(chatID, "Getting images..."))
 
 	links := crawler.GetImgLinks(pageURL)
 	for i := 0; i < len(links); i++ {
+		c := make(chan int64)
+
 		path := fmt.Sprintf("img_%v.jpg", i)
 
-		crawler.SaveImage(links[i].Attr[0].Val, path)
-		msg := tgbotapi.NewPhotoUpload(update.Message.Chat.ID, path)
-
-		_, err := bot.Send(msg)
-		if err != nil {
-			panic(err)
-		}
+		go crawler.SaveImage(c, links[i].Attr[0].Val, path)
+		go sendMessage(c, chatID, path, bot)
 	}
 }
 
