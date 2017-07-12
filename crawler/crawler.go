@@ -24,7 +24,7 @@ func GetImgLinks(url string) []*html.Node {
 	fileName := regexp.MustCompile(`.*camera[0-9]+TP.*`)
 
 	matcher := func(n *html.Node) bool {
-		if len(n.Attr) > 0 && n.DataAtom == atom.A {
+		if n.DataAtom == atom.A && scrape.Attr(n, `class`) == `imagem` {
 			return fileName.MatchString(n.Attr[0].Val)
 		}
 

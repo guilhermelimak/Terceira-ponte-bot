@@ -22,7 +22,7 @@ func sendMessage(c chan int64, chatID int64, path string, bot *tgbotapi.BotAPI) 
 }
 
 func parseUpdate(update *tgbotapi.Update, bot *tgbotapi.BotAPI) {
-	pageURL := "http://www.rodosol.com.br/blog/categoria/terceira-ponte"
+	pageURL := "http://www.rodosol.com.br/"
 	chatID := update.Message.Chat.ID
 
 	if update.Message == nil {
